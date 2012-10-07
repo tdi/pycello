@@ -30,24 +30,22 @@ class CellScreen():
             self.size_x, self.size_y = size_x, size_y
        # self.screen.border(0)
         signal.signal(signal.SIGINT, self._sig_hdl)
-        self._init_board()
 
     def set_cell(self, chrnum):
         self._cell_sign = chrnum
 
     def draw_board(self):
         for cell in self.board:
-            #if self.board[cell] == 1: self.screen.addstr(cell[0], cell[1], str(chr(0x25a0)))
             if self.board[cell] == 1: self.screen.addstr(cell[0], cell[1], self._cell_sign)
         self.screen.refresh()
         self.screen.clear()
 
 
-    def _init_board(self):
+    def init_board(self, rand_factor=0.25):
         self.board = dict()
         for x in range(self.size_x):
             for y in range(self.size_y):
-                if random.random() < 0.25:
+                if random.random() < rand_factor:
                     self.board[(x,y)] = 1
                 else:
                     self.board[(x,y)] = 0
@@ -83,15 +81,18 @@ def main():
     parser = argparse.ArgumentParser(description="%s by %s" % (__appname__, __author__))
     parser.add_argument("-d", "--delay", help="Delay for drawing, default 1s", action="store", dest="delay", type=int, default=1)
     parser.add_argument("-g", "--geometry", help="Geometry e.g. 50x50 or MAX for maximal", action="store", dest="geom", type=str, default="MAX")
-    parser.add_argument("--cell_char", help="Geometry e.g. 50x50 or MAX for maximal", action="store", dest="cell_char", type=str, default="#")
+    parser.add_argument("--cell_char", help="A character depicting a cell", action="store", dest="cell_char", type=str, default=str(chr(0x25a2)))
+    parser.add_argument("--rand_factor", help="Randomization factor", action="store", dest="randfact", type=float, default=0.25)
     args = parser.parse_args()
     cs = None
     if args.geom == "MAX":
         cs = CellScreen(args.geom)
+        cs.init_board(args.randfact)
         cs.set_cell(args.cell_char)
     else:
         geom = args.geom.split("x")
         cs = CellScreen(int(geom[0]), int(geom[1]))
+        cs.init_board(args.randfact)
         cs.set_cell(args.cell_char)
     while True:
         cs.update_board()
