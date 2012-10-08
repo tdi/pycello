@@ -27,6 +27,8 @@ class CellScreen():
 
     def __init__(self, size_x=50, size_y=20):
         self._cell_sign = "#"
+        self.birth = [int(x) for x in "2"]
+        self.survive = [int(x) for x in "23"]
         self.screen = curses.initscr()
         if size_x == "MAX" or size_y == "MAX":
             self.size_x, self.size_y = self.screen.getmaxyx()
@@ -37,6 +39,12 @@ class CellScreen():
 
     def set_cell(self, chrnum):
         self._cell_sign = chrnum
+
+    def set_birth(self, bi):
+        self.birth = tuple(bi)
+
+    def set_surv(self, surv):
+        self.survive = tuple(surv)
 
     def draw_board(self):
         for cell in self.board:
@@ -59,17 +67,12 @@ class CellScreen():
         curses.endwin()
         sys.exit(1)
 
-class GameOfLife(CellScreen):
-
-    def __init__(self, size_x=50, size_y=20):
-        super().__init__(size_x, size_y)
-
     def update_board(self):
         for cell in self.board:
             neighs = self._count_neighs(cell)
-            if self.board[cell] == 0 and neighs == 3:
+            if self.board[cell] == 0 and neighs in self.birth:
                 self.board[cell] = 2
-            elif self.board[cell] == 1 and not neighs in [2,3]:
+            elif self.board[cell] == 1 and not neighs in self.survive:
                 self.board[cell] = -1
         for cell in self.board:
             if self.board[cell] == 2:
@@ -86,9 +89,12 @@ class GameOfLife(CellScreen):
                     score += 1
         return score
 
-
-
-
+def parse_llrule(rule):
+    birth, surv = rule.split("/")
+    birth, surv = birth[1:], surv[1:]
+    if len(birth) == 0: birth = "0"
+    if len(surv) == 0: surv = "0"
+    return (birth, surv)
 
 def main():
     parser = argparse.ArgumentParser(description="%s by %s" % (__appname__, __author__))
@@ -96,15 +102,23 @@ def main():
     parser.add_argument("-g", "--geometry", help="Geometry e.g. 50x50 or MAX for maximal", action="store", dest="geom", type=str, default="MAX")
     parser.add_argument("--cell_char", help="A character depicting a cell", action="store", dest="cell_char", type=str, default=str(chr(0x25a2)))
     parser.add_argument("--rand_factor", help="Randomization factor", action="store", dest="randfact", type=float, default=0.25)
+    parser.add_argument("--llrule", help="Lifelike rule e.g. B3/S23 for CGoL", action="store", dest="llrule", type=str, default="B3/S23")
     args = parser.parse_args()
     cs = None
+
+    bi, su = parse_llrule(args.llrule)
+
     if args.geom == "MAX":
-        cs = GameOfLife(args.geom)
+        cs = CellScreen(args.geom)
+        cs.birth = [int(x) for x in bi]
+        cs.survive = [int(x) for x in su]
         cs.init_board(args.randfact)
         cs.set_cell(args.cell_char)
     else:
         geom = args.geom.split("x")
-        cs = GameOfLife(int(geom[0]), int(geom[1]))
+        cs = CellScreen(int(geom[0]), int(geom[1]))
+        cs.birth = [int(x) for x in bi]
+        cs.survive = [int(x) for x in su]
         cs.init_board(args.randfact)
         cs.set_cell(args.cell_char)
     while True:
