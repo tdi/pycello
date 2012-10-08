@@ -5,9 +5,14 @@ __version__ = "0.1"
 __author__  = "Dariusz Dwornikowski"
 __licence__ = "LGPL"
 
+
+import sys
+if sys.version_info[0] != 3:
+    print("Works only in python 3")
+    exit(1)
+
 import time
 import random
-import sys
 import signal
 import argparse
 
@@ -28,7 +33,6 @@ class CellScreen():
             self.size_x, self.size_y = self.size_x-1, self.size_y-1
         else:
             self.size_x, self.size_y = size_x, size_y
-       # self.screen.border(0)
         signal.signal(signal.SIGINT, self._sig_hdl)
 
     def set_cell(self, chrnum):
@@ -49,6 +53,16 @@ class CellScreen():
                     self.board[(x,y)] = 1
                 else:
                     self.board[(x,y)] = 0
+
+
+    def _sig_hdl(self, signal, frame):
+        curses.endwin()
+        sys.exit(1)
+
+class GameOfLife(CellScreen):
+
+    def __init__(self, size_x=50, size_y=20):
+        super().__init__(size_x, size_y)
 
     def update_board(self):
         for cell in self.board:
@@ -73,9 +87,8 @@ class CellScreen():
         return score
 
 
-    def _sig_hdl(self, signal, frame):
-        curses.endwin()
-        sys.exit(1)
+
+
 
 def main():
     parser = argparse.ArgumentParser(description="%s by %s" % (__appname__, __author__))
@@ -86,12 +99,12 @@ def main():
     args = parser.parse_args()
     cs = None
     if args.geom == "MAX":
-        cs = CellScreen(args.geom)
+        cs = GameOfLife(args.geom)
         cs.init_board(args.randfact)
         cs.set_cell(args.cell_char)
     else:
         geom = args.geom.split("x")
-        cs = CellScreen(int(geom[0]), int(geom[1]))
+        cs = GameOfLife(int(geom[0]), int(geom[1]))
         cs.init_board(args.randfact)
         cs.set_cell(args.cell_char)
     while True:
