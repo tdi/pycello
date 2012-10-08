@@ -1,7 +1,11 @@
-pycello
-=======
+==========
+pycello.py
+==========
 
 Some cellular automata fun in curses. 
+
+:Author: Dariusz Dwornikowski
+:Version: 0.1
 
 Synopsis
 ========
@@ -26,12 +30,25 @@ Run Conway's game of life with delay 0.
 
 Options
 =======
-  ``-d DELAY ``
-  A delay between drawing next generations.
-  ``--llrule "RULE"``
-  Life-like game rule. More on rules can be found `here <http://en.wikipedia.org/wiki/Life-like_cellular_automaton>`_ .
-  ``--rand_factor FACTOR`` 
-  Default: 0.25 means 0.25 of the bord will be filled randomely at start
+``-d DELAY``
+A delay between drawing next generations.
+``--llrule "RULE"``
+Life-like game rule. More on rules can be found `here <http://en.wikipedia.org/wiki/Life-like_cellular_automaton>`_ .
+``--rand_factor FACTOR`` 
+Default: 0.25 means 0.25 of the bord will be filled randomely at start.
+``-g GEOM``
+Default: max of the terminal. Geometry is given as "XxY" dimensions.
+Example: 50x50. 
+``--cell_char CHARACTER``
+The character to use for a living cell. 
 
+Copyright
+=========
+(c) 2012 Dariusz Dwornikowski
+
+This program comes with ABSOLUTELY NO WARRANTY.
+THIS IS FREE SOFTWARE, AND YOU ARE WELCOME TO REDISTRIBUTE IT UNDER THE TERMS
+AND CONDITIONS OF THE MIT LICENSE.  YOU SHOULD HAVE RECEIVED A COPY OF THE
+LICENSE ALONG WITH THIS SOFTWARE; IF NOT, YOU CAN DOWNLOAD A COPY FROM HTTP://WWW.OPENSOURCE.ORG.
 
 
