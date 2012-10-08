@@ -24,23 +24,22 @@ Description
 Just a cellular automata fun program in curses, written in Python 3.X. 
 Examples:
 
-Run Conway's game of life with delay 0. 
+Run Conway's game of life with delay 0.::
 
   $ ./pycello.py -d 0 --llrule "B3/S23" 
 
 Options
 =======
 ``-d DELAY``
-A delay between drawing next generations.
+  A delay between drawing next generations.
 ``--llrule "RULE"``
-Life-like game rule. More on rules can be found `here <http://en.wikipedia.org/wiki/Life-like_cellular_automaton>`_ .
+  Life-like game rule. More on rules can be found `here <http://en.wikipedia.org/wiki/Life-like_cellular_automaton>`_ .
 ``--rand_factor FACTOR`` 
-Default: 0.25 means 0.25 of the bord will be filled randomely at start.
+  Default: 0.25 means 0.25 of the bord will be filled randomely at start.
 ``-g GEOM``
-Default: max of the terminal. Geometry is given as "XxY" dimensions.
-Example: 50x50. 
+  Default: max of the terminal. Geometry is given as "XxY" dimensions. Example: 50x50. 
 ``--cell_char CHARACTER``
-The character to use for a living cell. 
+  The character to use for a living cell. 
 
 Copyright
 =========
