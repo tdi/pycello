@@ -35,7 +35,7 @@ Options
 ``--llrule "RULE"``
   Life-like game rule. More on rules can be found `here <http://en.wikipedia.org/wiki/Life-like_cellular_automaton>`_ .
 ``--rand_factor FACTOR`` 
-  Default: 0.25 means 0.25 of the bord will be filled randomely at start.
+  Default: 0.25, if random < rand_factor: cell is alive
 ``-g GEOM``
   Default: max of the terminal. Geometry is given as "XxY" dimensions. Example: 50x50. 
 ``--cell_char CHARACTER``

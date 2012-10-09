@@ -12,6 +12,7 @@ if sys.version_info[0] != 3:
     exit(1)
 
 import time
+import re
 import random
 import signal
 import argparse
@@ -52,6 +53,8 @@ class CellScreen():
         self.screen.refresh()
         self.screen.clear()
 
+    def _cell_sign_gen(self):
+        return str(("a", "b", "#", "$" , "%", "^", "&", "8", "O", "0")[int(random.random()*10)])
 
     def init_board(self, rand_factor=0.25):
         self.board = dict()
@@ -90,11 +93,25 @@ class CellScreen():
         return score
 
 def parse_llrule(rule):
+    if not re.match('B[0-8]*/S[0-8]*', rule):
+        print("Rule's syntax must be e.g. : BXX/SXX, where X is in (0,8)")
+        sys.exit(1)
     birth, surv = rule.split("/")
     birth, surv = birth[1:], surv[1:]
     if len(birth) == 0: birth = "0"
     if len(surv) == 0: surv = "0"
     return (birth, surv)
+
+def validate_geom(geom):
+    if not re.match('[0-9]+x[0-9]+', geom):
+        print("Geometry must be of a form XXxYY, e.g. 50x50")
+        sys.exit(1)
+
+def validate_rand_factor(rnd):
+    if rnd < 0 or rnd > 1:
+        print("Rand factor must be between 0 and 1")
+        sys.exit(1)
+
 
 def main():
     parser = argparse.ArgumentParser(description="%s by %s" % (__appname__, __author__))
@@ -108,6 +125,8 @@ def main():
 
     bi, su = parse_llrule(args.llrule)
 
+    validate_rand_factor(args.randfact)
+
     if args.geom == "MAX":
         cs = CellScreen(args.geom)
         cs.birth = [int(x) for x in bi]
@@ -115,6 +134,7 @@ def main():
         cs.init_board(args.randfact)
         cs.set_cell(args.cell_char)
     else:
+        validate_geom(args.geom)
         geom = args.geom.split("x")
         cs = CellScreen(int(geom[0]), int(geom[1]))
         cs.birth = [int(x) for x in bi]
