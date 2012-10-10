@@ -120,6 +120,7 @@ def main():
     parser.add_argument("--cell_char", help="A character depicting a cell", action="store", dest="cell_char", type=str, default=str(chr(0x25a2)))
     parser.add_argument("--rand_factor", help="Randomization factor", action="store", dest="randfact", type=float, default=0.25)
     parser.add_argument("--llrule", help="Lifelike rule e.g. B3/S23 for CGoL", action="store", dest="llrule", type=str, default="B3/S23")
+    parser.add_argument("--load", help="Load a shape from file", action="store", dest="shape", type=str)
     args = parser.parse_args()
     cs = None
 
