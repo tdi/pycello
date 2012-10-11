@@ -41,6 +41,18 @@ Options
 ``--cell_char CHARACTER``
   The character to use for a living cell. 
 
+TODO
+====
+
+General
+-------
+* decent GUI
+* add ERLE shapes loading (compatibility with Golly)
+* add 1D automata support
+* support for N state cells (connected to ERLE support)
+* hashlife :)
+
+
 Copyright
 =========
 (c) 2012 Dariusz Dwornikowski
