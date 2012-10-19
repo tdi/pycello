@@ -1,22 +1,26 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 __appname__ = 'pyCello'
 __version__ = "0.1"
 __author__  = "Dariusz Dwornikowski"
 __licence__ = "LGPL"
 
-
 import sys
-if sys.version_info[0] != 3:
-    print("Works only in python 3")
-    exit(1)
-
 import time
 import re
 import random
 import signal
 import argparse
 
+try:
+    pass
+#    import pygame
+#    from pygame.locals import *
+#    from boxes import Box
+except ImportError:
+    print("Pygame not found")
+    print()
+    sys.exit(1)
 try:
     import curses
 except ImportError:
@@ -26,7 +30,7 @@ except ImportError:
 
 class CellScreen():
 
-    def __init__(self, size_x=50, size_y=20):
+    def __init__(self, size_x=50, size_y=20, gui="curses"):
         self._cell_sign = "#"
         self.birth = [int(x) for x in "2"]
         self.survive = [int(x) for x in "23"]
@@ -88,6 +92,7 @@ class CellScreen():
         score = 0
         for nei in neighs:
             if nei in self.board.keys():
+#            if nei in list(self.board.keys()):
                 if self.board[nei] in [1,-1]:
                     score += 1
         return score
@@ -114,13 +119,17 @@ def validate_rand_factor(rnd):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="%s by %s" % (__appname__, __author__))
+    parser = argparse.ArgumentParser(prog=__appname__,description="%s by %s" % (__appname__, __author__))
     parser.add_argument("-d", "--delay", help="Delay for drawing, default 1s", action="store", dest="delay", type=int, default=1)
     parser.add_argument("-g", "--geometry", help="Geometry e.g. 50x50 or MAX for maximal", action="store", dest="geom", type=str, default="MAX")
-    parser.add_argument("--cell_char", help="A character depicting a cell", action="store", dest="cell_char", type=str, default=str(chr(0x25a2)))
+    if sys.version_info[0] == 3:
+        parser.add_argument("--cell_char", help="A character depicting a cell", action="store", dest="cell_char", type=str, default=str(chr(0x25a2)))
+    else:
+        parser.add_argument("--cell_char", help="A character depicting a cell", action="store", dest="cell_char", type=str, default=".")
     parser.add_argument("--rand_factor", help="Randomization factor", action="store", dest="randfact", type=float, default=0.25)
     parser.add_argument("--llrule", help="Lifelike rule e.g. B3/S23 for CGoL", action="store", dest="llrule", type=str, default="B3/S23")
-    parser.add_argument("--load", help="Load a shape from file", action="store", dest="shape", type=str)
+#    parser.add_argument("--load", help="Load a shape from file", action="store", dest="shape", type=str)
+#    parser.add_argument("--gui", help="Gui type: curses, pygame", action="store", dest="gui", type=str, default="curses")
     args = parser.parse_args()
     cs = None
 
@@ -142,6 +151,8 @@ def main():
         cs.survive = [int(x) for x in su]
         cs.init_board(args.randfact)
         cs.set_cell(args.cell_char)
+
+    running = True
     while True:
         cs.update_board()
         cs.draw_board()
