@@ -5,7 +5,7 @@ pycello.py
 Some cellular automata fun in curses. 
 
 :Author: Dariusz Dwornikowski
-:Version: 0.1
+:Version: 0.2
 
 Synopsis
 ========
@@ -21,12 +21,19 @@ Synopsis
 Description
 ===========
 
-Just a cellular automata fun program in curses, written in Python 3.X. 
+Just a cellular automata fun program in curses.
+Currently pyCello supports all life-like automata.
 Examples:
 
 Run Conway's game of life with delay 0.::
 
   $ ./pycello.py -d 0 --llrule "B3/S23" 
+
+Warning
+=======
+
+PyCello works both in python 3 and python > 2.7. In the non-patched python 2.7
+it might not work, due to lack of pacthes on argparse. 
 
 Options
 =======
