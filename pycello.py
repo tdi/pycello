@@ -13,15 +13,6 @@ import signal
 import argparse
 
 try:
-    pass
-#    import pygame
-#    from pygame.locals import *
-#    from boxes import Box
-except ImportError:
-    print("Pygame not found")
-    print()
-    sys.exit(1)
-try:
     import curses
 except ImportError:
     print("Curses not found")
@@ -35,6 +26,9 @@ class CellScreen():
         self.birth = [int(x) for x in "2"]
         self.survive = [int(x) for x in "23"]
         self.screen = curses.initscr()
+        curses.start_color()
+        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_RED)
+        curses.noecho()
         if size_x == "MAX" or size_y == "MAX":
             self.size_x, self.size_y = self.screen.getmaxyx()
             self.size_x, self.size_y = self.size_x-1, self.size_y-1
@@ -53,7 +47,8 @@ class CellScreen():
 
     def draw_board(self):
         for cell in self.board:
-            if self.board[cell] == 1: self.screen.addstr(cell[0], cell[1], self._cell_sign)
+            if self.board[cell] == 1: 
+                self.screen.addstr(cell[0], cell[1], self._cell_sign, curses.color_pair(1))
         self.screen.refresh()
         self.screen.clear()
 
@@ -116,6 +111,7 @@ def validate_rand_factor(rnd):
     if rnd < 0 or rnd > 1:
         print("Rand factor must be between 0 and 1")
         sys.exit(1)
+
 
 
 def main():
